@@ -68,4 +68,23 @@ describe('set', () => {
     set({}, '__proto__[test2]', '456');
     expect(Object.prototype).toEqual({});
   });
+
+  it.each(['01', '1e2', ' 1', '+1', '4294967295'])(
+    'keep the non-canonical numeric key %s as an object property',
+    (key) => {
+      const target = {};
+      set(target, `codes.${key}`, 'value');
+
+      expect(target).toEqual({ codes: { [key]: 'value' } });
+      expect(Array.isArray((target as { codes: unknown }).codes)).toBe(false);
+    },
+  );
+
+  it('create an array for a canonical numeric key', () => {
+    const target = {};
+    set(target, 'items.0', 'first');
+
+    expect(target).toEqual({ items: ['first'] });
+    expect(Array.isArray((target as { items: unknown }).items)).toBe(true);
+  });
 });

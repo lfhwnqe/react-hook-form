@@ -1,6 +1,7 @@
 import { PROTOTYPE_KEYWORDS } from '../constants';
 import type { FieldPath, FieldValues } from '../types';
 
+import isArrayIndex from './isArrayIndex';
 import isKey from './isKey';
 import isObject from './isObject';
 import stringToPath from './stringToPath';
@@ -24,7 +25,7 @@ export default (
       newValue =
         isObject(objValue) || Array.isArray(objValue)
           ? objValue
-          : !isNaN(+tempPath[index + 1])
+          : isArrayIndex(tempPath[index + 1])
             ? []
             : {};
     }
